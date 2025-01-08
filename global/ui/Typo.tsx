@@ -10,6 +10,8 @@ const fetchFonts = () => {
     Thin: require("../../assets/fonts/Raleway-Thin.ttf"),
     Light: require("../../assets/fonts/Raleway-Light.ttf"),
     Bold: require("../../assets/fonts/Raleway-Bold.ttf"),
+    Medium: require("../../assets/fonts/Raleway-Medium.ttf"),
+    SemiBold: require("../../assets/fonts/Raleway-SemiBold.ttf"),
   });
 };
 
@@ -17,7 +19,7 @@ const Typo = ({
   children,
   style,
   fontSize = 16,
-  fontWeight = "Regular",
+  fontWeight = "SemiBold",
 }: UIDesignProps) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);
   const { width } = useWindowDimensions();

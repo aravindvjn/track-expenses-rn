@@ -4,5 +4,5 @@ export type UIDesignProps = {
     children?: ReactNode,
     style?: {},
     fontSize?: number,
-    fontWeight?:'Regular' | 'Thin' | 'Light' | 'Bold'
+    fontWeight?: 'Regular' | 'Thin' | 'Light' | 'Bold' | 'Medium' | 'SemiBold'
 }
