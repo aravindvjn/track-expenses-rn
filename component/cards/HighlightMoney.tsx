@@ -1,32 +1,38 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-import React from "react";
+import React, { ReactNode } from "react";
 import Typo from "../../global/ui/Typo";
+import { globalStyles } from "../../global/constants/styles";
 
 export type HighlightMoney = {
   type: "Balance" | "Expense";
   heading: string;
   money: number;
+  children?: ReactNode;
 };
 
 const HighlightMoney = ({
   heading = "Total Expense",
   money = 0,
   type = "Expense",
-}) => {
+  children,
+}: HighlightMoney) => {
   let style: StyleProp<ViewStyle>;
   if (type === "Expense") {
-    style = { width: "55%" };
+    style = { width: "57%" };
   } else {
     style = {
-      width: "42%",
+      width: "41%",
       backgroundColor: "#8FBC8B",
     };
   }
   return (
-    <View style={[styles.container, style]}>
-      <Typo fontSize={18} style={styles.text}>
-        {heading}
-      </Typo>
+    <View style={[styles.container, style,]}>
+      <View style={[globalStyles.row,globalStyles.center]}>
+        <Typo fontSize={18} style={styles.text}>
+          {heading}
+        </Typo>
+        {children}
+      </View>
       <Typo fontSize={24} fontWeight="Bold" style={styles.text}>
         Rs. {money}
       </Typo>

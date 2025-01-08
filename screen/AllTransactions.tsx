@@ -18,9 +18,9 @@ const AllTransactions = () => {
         >
           To Be Given
         </Typo>
-        <ScrollView style={{ maxHeight: 200 }}>
+        <View>
           <RecentExpense noBalance style={{ borderRadius: 0 }} />
-        </ScrollView>
+        </View>
       </View>
       <View style={styles.givenContainer}>
         <Typo
@@ -30,9 +30,9 @@ const AllTransactions = () => {
         >
           This Month
         </Typo>
-        <ScrollView style={{ maxHeight: 200 }}>
+        <View>
           <RecentExpense noBalance style={{ borderRadius: 0 }} />
-        </ScrollView>
+        </View>
         <View style={styles.totalExpense}>
           <Typo>Total Expense : Rs. 233</Typo>
         </View>
@@ -45,9 +45,9 @@ const AllTransactions = () => {
         >
           This Year
         </Typo>
-        <ScrollView style={{ maxHeight: 200 }}>
+        <View>
           <RecentExpense noBalance style={{ borderRadius: 0 }} />
-        </ScrollView>
+        </View>
         <View style={styles.totalExpense}>
           <Typo>Total Expense : Rs. 233</Typo>
         </View>

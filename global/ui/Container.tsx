@@ -11,7 +11,7 @@ const Container = ({ children, style }: UIDesignProps) => {
       style={styles.gradient}
       colors={["#192f6a", "#3b5998", "#ffffff"]}
     >
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={{ flex: 1 }}>
           <StatusBar style="light" />
           <View style={[styles.container, style]}>{children}</View>
@@ -25,7 +25,7 @@ export default Container;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
+    paddingHorizontal: 10,
   },
   gradient: {
     flex: 1,

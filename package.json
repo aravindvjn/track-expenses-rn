@@ -26,10 +26,12 @@
     "react-native-animatable": "^1.4.0",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-get-random-values": "^1.11.0",
+    "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-reanimated": "^3.16.6",
     "react-native-safe-area-context": "^5.0.0",
     "react-native-screens": "^4.4.0",
-    "react-native-status-bar-height": "^2.6.0"
+    "react-native-status-bar-height": "^2.6.0",
+    "expo-secure-store": "~14.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

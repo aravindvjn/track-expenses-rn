@@ -1,21 +1,35 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import React from "react";
 import Container from "../global/ui/Container";
-import { globalStyles } from "../global/constants/styles";
 import Typo from "../global/ui/Typo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { NavigationProp } from "@react-navigation/native";
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<"WelcomeScreen">;
+}) => {
   const handlePress = async () => {
     try {
       await AsyncStorage.setItem("isNewUser", "no");
-    } catch {
-      console.log("Failed to GetStarted");
+      navigation.navigate("Home");
+      console.log("Stored isNewUser as 'no'");
+    } catch (error) {
+      console.log("Failed to GetStarted", error);
     }
   };
+
+  const { height } = useWindowDimensions();
   return (
-    <Container style={globalStyles.center}>
-      <View style={styles.innerContainer}>
+    <Container style={styles.container}>
+      <View style={[styles.innerContainer, { height: height - 60 }]}>
         <View></View>
         <View>
           <Typo fontSize={25} fontWeight="Bold" style={styles.text}>
@@ -23,7 +37,11 @@ const WelcomeScreen = () => {
           </Typo>
         </View>
         <View>
-          <Button onPress={handlePress} title="Get Started" />
+          <Button
+            onPress={handlePress}
+            title="Get Started"
+            accessibilityLabel="Start tracking your expenses"
+          />
         </View>
       </View>
     </Container>
@@ -33,11 +51,17 @@ const WelcomeScreen = () => {
 export default WelcomeScreen;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   innerContainer: {
+    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
-    height: "100%",
-    padding:30
+    padding: 30,
   },
-  text: {},
+  text: {
+    color: "white",
+    marginBottom: 20,
+  },
 });
