@@ -2,6 +2,7 @@ import { StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import React, { ReactNode } from "react";
 import Typo from "../../global/ui/Typo";
 import { globalStyles } from "../../global/constants/styles";
+import { ExpenseProps } from "../../global/types/types";
 
 export type HighlightMoney = {
   type: "Balance" | "Expense";
@@ -22,12 +23,12 @@ const HighlightMoney = ({
   } else {
     style = {
       width: "41%",
-      backgroundColor: "#8FBC8B",
+      backgroundColor: money < 0 ? "red" : "#8FBC8B",
     };
   }
   return (
-    <View style={[styles.container, style,]}>
-      <View style={[globalStyles.row,globalStyles.center]}>
+    <View style={[styles.container, style]}>
+      <View style={[globalStyles.row, globalStyles.center]}>
         <Typo fontSize={18} style={styles.text}>
           {heading}
         </Typo>

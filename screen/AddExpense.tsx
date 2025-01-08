@@ -7,12 +7,16 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "../global/ui/Container";
 import Typo from "../global/ui/Typo";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { globalStyles } from "../global/constants/styles";
 import { Ionicons } from "@expo/vector-icons";
+import { ExpenseProps } from "../global/types/types";
+import CustomButton from "../global/ui/CustomButton";
+import Toast from "react-native-toast-message";
+import { storeExpense } from "../global/functions/fetchData";
 
 const AddExpense = () => {
   const { height } = useWindowDimensions();
@@ -20,8 +24,11 @@ const AddExpense = () => {
   const [isDatePickerVisible, setDatePickerVisibility] =
     useState<boolean>(false);
 
-  const [selectedDate, setSelectedDate] = useState<String>("");
-
+  const [inputs, setInputs] = useState<ExpenseProps>({
+    title: "",
+    date: new Date().toLocaleDateString(),
+    amount: 0,
+  });
   const showDatePicker = () => {
     setDatePickerVisibility(true);
   };
@@ -31,9 +38,32 @@ const AddExpense = () => {
   };
 
   const handleConfirm = (date: Date) => {
-    setSelectedDate(date.toLocaleDateString());
+    setInputs((prev) => ({ ...prev, date: date.toLocaleDateString() }));
     hideDatePicker();
   };
+  const handleAddExpense = async () => {
+    if (!inputs.amount || !inputs.amount) {
+      Toast.show({
+        type: "error",
+        text1: "Please Fill the all Inputs.",
+        visibilityTime: 3000,
+      });
+    } else if (!inputs.date) {
+      Toast.show({
+        type: "error",
+        text1: "Please Select the Date.",
+        visibilityTime: 3000,
+      });
+    } else {
+      await storeExpense(inputs);
+      setInputs({
+        title: "",
+        date: new Date().toLocaleDateString(),
+        amount: 0,
+      });
+    }
+  };
+
   return (
     <Container>
       <View style={[styles.outerContainer, { minHeight: height - 120 }]}>
@@ -42,12 +72,26 @@ const AddExpense = () => {
             Add Expense
           </Typo>
           <Typo style={[styles.label]}>Title</Typo>
-          <TextInput style={styles.textInput} placeholder="Enter the Title" />
+          <TextInput
+            value={inputs.title}
+            onChangeText={(text) =>
+              setInputs((prev) => ({ ...prev, title: text }))
+            }
+            style={styles.textInput}
+            placeholder="Enter the Title"
+          />
           <Typo style={[styles.label]}>Amount</Typo>
-          <TextInput style={styles.textInput} placeholder="Enter amount" />
+          <TextInput
+            keyboardType="decimal-pad"
+            onChangeText={(text) =>
+              setInputs((prev) => ({ ...prev, amount: Number(text) }))
+            }
+            style={styles.textInput}
+            placeholder="Enter amount"
+          />
           <View style={[globalStyles.row, styles.dateContainer]}>
             <Typo style={[styles.label, { marginTop: 0 }]}>
-              Select Date: {selectedDate}
+              Select Date: {inputs?.date}
             </Typo>
             <DateTimePickerModal
               isVisible={isDatePickerVisible}
@@ -65,7 +109,7 @@ const AddExpense = () => {
               <Ionicons name="calendar" size={20} />
             </Pressable>
           </View>
-          <Button title="Add Expense" />
+          <CustomButton onPress={handleAddExpense}>Add Expense</CustomButton>
         </View>
       </View>
     </Container>
@@ -101,8 +145,8 @@ const styles = StyleSheet.create({
   dateContainer: {
     marginTop: 10,
     marginBottom: 20,
-    alignItems:'center',
-    gap:10
+    alignItems: "center",
+    gap: 10,
   },
   pressable: {
     padding: 10,

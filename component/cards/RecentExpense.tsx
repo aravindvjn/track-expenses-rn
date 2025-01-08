@@ -8,23 +8,17 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Typo from "../../global/ui/Typo";
+import { ExpenseProps } from "../../global/types/types";
 
 const RecentExpense = ({
   style,
   noBalance,
+  expenses = [],
 }: {
   style?: StyleProp<ViewStyle>;
   noBalance?: boolean;
+  expenses?: ExpenseProps[];
 }) => {
-  const tableData = [
-    { id: 1, name: "John Doe", age: 28 },
-    { id: 2, name: "Jane Smith", age: 34 },
-    { id: 3, name: "Sam Brown", age: 23 },
-    { id: 4, name: "Sam Brown", age: 23 },
-    { id: 5, name: "Sam Brown", age: 23 },
-    { id: 6, name: "Sam Brown", age: 23 },
-  ];
-
   const [count, setCount] = useState<number>(5);
 
   return (
@@ -39,27 +33,29 @@ const RecentExpense = ({
         <Typo style={[styles.tableCell, styles.headerCell, styles.money]}>
           Amount
         </Typo>
-        {!noBalance && (
+        {/* {!noBalance && (
           <Typo style={[styles.tableCell, styles.headerCell, styles.money]}>
             Balance
           </Typo>
-        )}
+        )} */}
       </View>
 
       {/* Table Data */}
-      {tableData?.slice(0, count)?.map((row, index) => {
+      {expenses?.slice(0, count)?.map((row, index) => {
         return (
-          <View key={row.id} style={styles.tableRow}>
+          <View key={index} style={styles.tableRow}>
             <Typo style={[styles.tableCell, styles.slno]}>{index + 1}</Typo>
-            <Typo style={[styles.tableCell, styles.title]}>{row.name}</Typo>
-            <Typo style={[styles.tableCell, styles.money]}>{row.age}</Typo>
-            {!noBalance && (
-              <Typo style={[styles.tableCell, styles.money]}>{row.age}</Typo>
-            )}
+            <Typo style={[styles.tableCell, styles.title]}>{row.title}</Typo>
+            <Typo style={[styles.tableCell, styles.money]}>{row.amount}</Typo>
+            {/* {!noBalance && (
+              <Typo style={[styles.tableCell, styles.money]}>
+                {balance - row.amount}
+              </Typo>
+            )} */}
           </View>
         );
       })}
-      {tableData?.length > count && (
+      {expenses?.length > count && (
         <View style={styles.pressableContainer}>
           <Pressable
             style={styles.pressable}

@@ -4,6 +4,7 @@ import { UIDesignProps } from "../types/types";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
+import Toast from "react-native-toast-message";
 
 const Container = ({ children, style }: UIDesignProps) => {
   return (
@@ -17,6 +18,7 @@ const Container = ({ children, style }: UIDesignProps) => {
           <View style={[styles.container, style]}>{children}</View>
         </SafeAreaView>
       </ScrollView>
+      <Toast />
     </LinearGradient>
   );
 };

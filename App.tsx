@@ -15,6 +15,7 @@ import Account from "./screen/Account";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Ionicons } from "@expo/vector-icons";
 
+
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createNativeStackNavigator();
@@ -94,9 +95,7 @@ export const BottomTabComponents = () => {
               />
             );
           } else if (route.name === "AddExpense") {
-            return (
-              <Ionicons name={"add"} size={size + 7} color={color} />
-            );
+            return <Ionicons name={"add"} size={size + 7} color={color} />;
           } else if (route.name === "Search") {
             iconName = "search";
           } else if (route.name === "Account") {
