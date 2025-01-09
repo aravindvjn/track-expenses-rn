@@ -14,10 +14,11 @@ import SearchExpense from "./screen/SearchExpense";
 import Account from "./screen/Account";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Ionicons } from "@expo/vector-icons";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
 
+const queryClient = new QueryClient();
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
@@ -69,12 +70,16 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isNewUser && <Stack.Screen name="Welcome" component={WelcomeScreen} />}
-        <Stack.Screen name="Home" component={BottomTabComponents} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QueryClientProvider client={queryClient}>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          {isNewUser && (
+            <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          )}
+          <Stack.Screen name="Home" component={BottomTabComponents} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QueryClientProvider>
   );
 }
 

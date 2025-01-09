@@ -13,5 +13,7 @@ export type ExpenseProps = {
     title: string;
     date: string;
     amount: number;
-
+    balance: number;
+    status: '+' | '-',
+    id: number
 }

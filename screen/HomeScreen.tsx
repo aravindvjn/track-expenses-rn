@@ -1,37 +1,29 @@
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import Typo from "../global/ui/Typo";
 import Container from "../global/ui/Container";
 import HighlightMoney from "../component/cards/HighlightMoney";
 import RecentExpense from "../component/cards/RecentExpense";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
-import {
-  getBalance,
-  getLast28DaysExpenses,
-} from "../global/functions/fetchData";
+import { getExpenses } from "../global/functions/fetchData";
 import AddMoney from "../component/Prompts/AddMoney";
-import { ExpenseProps } from "../global/types/types";
+import { useQuery } from "@tanstack/react-query";
 
 const HomeScreen = () => {
   const [showAddMoney, setShowAddMoney] = useState<boolean>(false);
-  const [balance, setBalance] = useState<number>(0);
-  const [expenses, setExpenses] = useState<ExpenseProps[]>([]);
-  const [totalExpense, setTotalExpense] = useState<number>(0);
-  useFocusEffect(() => {
-    const fetchBalance = async () => {
-      const results = await getBalance();
-      setBalance(results);
-    };
-    fetchBalance();
 
-    const fetchExpense = async () => {
-      const results = await getLast28DaysExpenses();
-      setExpenses(results?.last28DaysExpenses);
-      setTotalExpense(results?.totalExpense);
-    };
-    fetchExpense();
+  const fetchExpenses = async () => {
+    const results = await getExpenses();
+    return results;
+  };
+
+  const { data: expenses, isLoading } = useQuery({
+    queryKey: ["expenses"],
+    queryFn: fetchExpenses,
   });
+  if (isLoading) {
+    return <Container></Container>;
+  }
   return (
     <>
       {showAddMoney && <AddMoney setShowAddMoney={setShowAddMoney} />}
@@ -41,13 +33,20 @@ const HomeScreen = () => {
             Expense Tracker
           </Typo>
         </View>
+        <Typo fontSize={18} style={styles.subheading}>
+          Last 28 Days
+        </Typo>
         <View style={styles.highlightContainer}>
           <HighlightMoney
             type="Expense"
             heading="Total Expense"
-            money={totalExpense}
+            money={expenses?.totalExpense}
           />
-          <HighlightMoney type="Balance" heading="Balance" money={balance}>
+          <HighlightMoney
+            type="Balance"
+            heading="Balance"
+            money={expenses?.filteredExpenses[0]?.balance}
+          >
             <Pressable
               onPress={() => setShowAddMoney(true)}
               style={[{ transform: [{ translateY: 3 }], paddingLeft: 5 }]}
@@ -56,9 +55,7 @@ const HomeScreen = () => {
             </Pressable>
           </HighlightMoney>
         </View>
-        <RecentExpense
-          expenses={expenses}
-        />
+        <RecentExpense showFull expenses={expenses?.filteredExpenses} />
       </Container>
     </>
   );
@@ -72,6 +69,11 @@ const styles = StyleSheet.create({
   highlightContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 20,
+    marginBottom: 20,
+  },
+  subheading: {
+    marginTop: 10,
+    marginBottom: 5,
+    color: "white",
   },
 });

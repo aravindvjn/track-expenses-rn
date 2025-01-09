@@ -3,8 +3,30 @@ import React from "react";
 import Container from "../global/ui/Container";
 import Typo from "../global/ui/Typo";
 import RecentExpense from "../component/cards/RecentExpense";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getExpenses,
+  getStoredMoneyToBeGiven,
+} from "../global/functions/fetchData";
 
 const AllTransactions = () => {
+  const fetchAllData = async () => {
+    const thisMonth = await getExpenses("thisMonth");
+    const lastYear = await getExpenses("thisYear");
+    const toBeGiven = await getStoredMoneyToBeGiven();
+    console.log(toBeGiven);
+    return {
+      thisMonth,
+      lastYear,
+      toBeGiven,
+    };
+  };
+
+  const { data: allTransactions } = useQuery({
+    queryKey: ["allTransactions"],
+    queryFn: fetchAllData,
+  });
+
   return (
     <Container>
       <Typo style={styles.text} fontSize={26} fontWeight="Bold">
@@ -18,8 +40,13 @@ const AllTransactions = () => {
         >
           To Be Given
         </Typo>
+
         <View>
-          <RecentExpense noBalance style={{ borderRadius: 0 }} />
+          <RecentExpense
+            // expenses={allTransactions?.toBeGiven}
+            noBalance
+            style={{ borderRadius: 0 }}
+          />
         </View>
       </View>
       <View style={styles.givenContainer}>
@@ -31,10 +58,15 @@ const AllTransactions = () => {
           This Month
         </Typo>
         <View>
-          <RecentExpense noBalance style={{ borderRadius: 0 }} />
+          <RecentExpense
+            expenses={allTransactions?.thisMonth?.filteredExpenses}
+            style={{ borderRadius: 0 }}
+          />
         </View>
         <View style={styles.totalExpense}>
-          <Typo>Total Expense : Rs. 233</Typo>
+          <Typo>
+            Total Expense : Rs. {allTransactions?.thisMonth?.totalExpense}
+          </Typo>
         </View>
       </View>
       <View style={styles.givenContainer}>
@@ -46,10 +78,15 @@ const AllTransactions = () => {
           This Year
         </Typo>
         <View>
-          <RecentExpense noBalance style={{ borderRadius: 0 }} />
+          <RecentExpense
+            expenses={allTransactions?.lastYear?.filteredExpenses}
+            style={{ borderRadius: 0 }}
+          />
         </View>
         <View style={styles.totalExpense}>
-          <Typo>Total Expense : Rs. 233</Typo>
+          <Typo>
+            Total Expense : Rs. {allTransactions?.lastYear?.totalExpense}
+          </Typo>
         </View>
       </View>
     </Container>
@@ -68,6 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: "hidden",
     marginVertical: 10,
+    elevation: 4,
   },
   totalExpense: {
     backgroundColor: "#f4f4f4",

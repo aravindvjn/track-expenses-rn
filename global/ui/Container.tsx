@@ -28,6 +28,7 @@ export default Container;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
+    paddingBottom: 20,
   },
   gradient: {
     flex: 1,

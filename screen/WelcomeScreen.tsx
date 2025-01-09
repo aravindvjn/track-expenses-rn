@@ -14,12 +14,12 @@ import { NavigationProp } from "@react-navigation/native";
 const WelcomeScreen = ({
   navigation,
 }: {
-  navigation: NavigationProp<"WelcomeScreen">;
+  navigation?: NavigationProp<"WelcomeScreen">;
 }) => {
   const handlePress = async () => {
     try {
       await AsyncStorage.setItem("isNewUser", "no");
-      navigation.navigate("Home");
+      navigation?.navigate("Home");
       console.log("Stored isNewUser as 'no'");
     } catch (error) {
       console.log("Failed to GetStarted", error);

@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1CAC78",
     borderRadius: 10,
     width: "50%",
+    elevation:4
   },
   text: {
     color: "white",

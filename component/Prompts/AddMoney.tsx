@@ -1,9 +1,11 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import Typo from "../../global/ui/Typo";
 import CustomButton from "../../global/ui/CustomButton";
 import { globalStyles } from "../../global/constants/styles";
-import { addToBalance } from "../../global/functions/fetchData";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { storeExpense } from "../../global/functions/fetchData";
+import Toast from "react-native-toast-message";
 
 const AddMoney = ({
   setShowAddMoney,
@@ -11,10 +13,42 @@ const AddMoney = ({
   setShowAddMoney: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [amount, setAmount] = useState<number>(0);
-  const addMoneyHandler = async () => {
-    await addToBalance(amount);
-    setShowAddMoney(false);
+  const queryClient = useQueryClient();
+  const mutation = useMutation(storeExpense, {
+    onSuccess: () => {
+      Toast.show({
+        type: "success",
+        text1:
+          amount >= 0
+            ? "Money added successfully!"
+            : "Money deducted successfully!",
+        visibilityTime: 3000,
+      });
+      queryClient.invalidateQueries(["expenses"]);
+      queryClient.invalidateQueries(["allTransactions"]);
+
+      setShowAddMoney(false);
+    },
+    onError: () => {
+      Toast.show({
+        type: "error",
+        text1: "Failed to add money.",
+        visibilityTime: 3000,
+      });
+    },
+  });
+
+  const addMoneyHandler = () => {
+    mutation.mutate({
+      title: "Money got added",
+      date: new Date().toLocaleDateString(),
+      amount,
+      balance: 0,
+      status: "+",
+      id: Date.now(),
+    });
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -37,7 +71,9 @@ const AddMoney = ({
           <CustomButton onPress={() => setShowAddMoney(false)}>
             Cancel
           </CustomButton>
-          <CustomButton onPress={addMoneyHandler}>Save</CustomButton>
+          <CustomButton onPress={addMoneyHandler}>
+            {mutation.isLoading ? "Saving..." : "Save"}
+          </CustomButton>
         </View>
       </View>
     </View>
