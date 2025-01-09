@@ -121,7 +121,7 @@ const AddExpense = () => {
       <View style={[styles.outerContainer, { minHeight: height - 120 }]}>
         <View style={styles.container}>
           <View>
-            <Typo fontSize={23} fontWeight="Bold">
+            <Typo fontSize={22} fontWeight="Bold">
               Add {!isToBeGiven ? "Expense" : "To Be Given Amount"}
             </Typo>
             <View
@@ -136,8 +136,8 @@ const AddExpense = () => {
               ]}
             >
               <CustomButton
-                textStyle={{ fontSize: 14 }}
-                style={{ backgroundColor: "red" }}
+                textStyle={{ fontSize: 10, color: "black" }}
+                style={{ backgroundColor: "#dcdcdc" }}
                 onPress={() => setIsToBeGiven((prev) => !prev)}
               >
                 Click here to add{" "}

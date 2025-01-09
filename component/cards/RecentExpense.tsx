@@ -2,63 +2,43 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
-  Text,
   View,
   ViewStyle,
 } from "react-native";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import Typo from "../../global/ui/Typo";
 import { ExpenseProps } from "../../global/types/types";
-import CustomButton from "../../global/ui/CustomButton";
-import {
-  NavigationProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
-import AppFeatures from "../Features/AppFeatures";
+import { useRoute } from "@react-navigation/native";
+import NoExpense from "./NoExpense";
+import { getColor } from "../../global/functions/getColors";
 
 const RecentExpense = ({
   style,
   noBalance,
   expenses = [],
   showFull,
+  setEditor,
 }: {
   style?: StyleProp<ViewStyle>;
   noBalance?: boolean;
   expenses?: ExpenseProps[];
   showFull?: boolean;
+  setEditor: Dispatch<SetStateAction<ExpenseProps | undefined>>;
 }) => {
-  const navigation: NavigationProp<"AddExpense"> = useNavigation();
   const { name } = useRoute();
   let limit = showFull ? 10 : 5;
   const [count, setCount] = useState<number>(limit);
   let date: string;
   if (expenses?.length === 0 && name === "Home") {
-    return (
-      <>
-        <View style={[styles.container, { padding: 20, paddingBottom: 20 }]}>
-          <Typo
-            fontSize={18}
-            fontWeight="SemiBold"
-            style={{ textAlign: "center", marginBottom: 10 }}
-          >
-            No Expenses Yet.
-          </Typo>
-          <CustomButton onPress={() => navigation.navigate("AddExpense")}>
-            Add Expenses
-          </CustomButton>
-        </View>
-        <AppFeatures />
-      </>
-    );
+    return <NoExpense />;
   }
   let info = null;
   if (expenses?.length === 0) {
     info = (
       <Typo
-        fontSize={18}
+        fontSize={14}
         fontWeight="SemiBold"
-        style={{ textAlign: "center", marginBottom: 10, paddingVertical: 20 }}
+        style={{ textAlign: "center", marginBottom: 10, paddingVertical: 10 }}
       >
         No Expenses Yet.
       </Typo>
@@ -93,24 +73,8 @@ const RecentExpense = ({
             </View>
           );
         }
-        let red;
-        if (row?.balance < 0) {
-          const alpha = -row?.balance / 10000;
-          if (alpha > 0.8) {
-            red = `rgba(255, 0, 0, 0.8)`;
-          } else if (alpha > 0.6) {
-            red = `rgba(255, 0, 0, 0.6)`;
-          } else if (alpha > 0.4) {
-            red = `rgba(255, 0, 0, 0.5)`;
-          } else if (alpha > 0.2) {
-            red = `rgba(255, 0, 0, 0.4)`;
-          } else {
-            red = `rgba(255, 0, 0, 0.3)`;
-          }
-        }
-
         return (
-          <View key={index}>
+          <Pressable onPress={() => setEditor(row)} key={index}>
             {dateComponent}
             <View
               key={index}
@@ -121,7 +85,7 @@ const RecentExpense = ({
                     row?.status === "+" && row?.balance >= 0
                       ? "#98FF98"
                       : row?.balance < 0
-                      ? red
+                      ? getColor(row?.balance)
                       : "",
                 },
               ]}
@@ -135,7 +99,7 @@ const RecentExpense = ({
                 </Typo>
               )}
             </View>
-          </View>
+          </Pressable>
         );
       })}
       {expenses?.length > limit && (
@@ -184,6 +148,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     paddingBottom: 10,
     elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
   },
   tableRow: {
     flexDirection: "row",
@@ -201,7 +169,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    flex: 3,
+    flex: 4,
   },
   money: {
     flex: 2,

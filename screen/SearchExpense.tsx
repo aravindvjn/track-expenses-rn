@@ -8,7 +8,7 @@ const SearchExpense = () => {
   return (
     <Container>
       <View>
-        <Typo style={styles.text} fontSize={26}>
+        <Typo style={styles.text} fontSize={22}>
           Search Expenses
         </Typo>
         <View>
@@ -33,14 +33,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     padding: 10,
+    paddingLeft: 20,
     borderRadius: 10,
     backgroundColor: "#f4f4f4",
-    minHeight: 40,
-    marginTop: 10,
+    minHeight: 45,
+    marginTop: 20,
   },
   pressable: {
     position: "absolute",
     right: 10,
-    top: 14,
+    top: 27,
   },
 });

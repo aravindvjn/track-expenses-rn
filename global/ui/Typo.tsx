@@ -18,7 +18,7 @@ const fetchFonts = () => {
 const Typo = ({
   children,
   style,
-  fontSize = 16,
+  fontSize = 13,
   fontWeight = "SemiBold",
 }: UIDesignProps) => {
   const [fontsLoaded, setFontsLoaded] = useState(false);

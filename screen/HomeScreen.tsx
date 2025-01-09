@@ -8,28 +8,26 @@ import { Ionicons } from "@expo/vector-icons";
 import { getExpenses } from "../global/functions/fetchData";
 import AddMoney from "../component/Prompts/AddMoney";
 import { useQuery } from "@tanstack/react-query";
+import { ExpenseProps } from "../global/types/types";
+import EditExpense from "../component/Prompts/EditExpense";
+import { useLatestExpense } from "../hook/dataHooks";
+import { totalExpenseCalcuator } from "../global/functions/totalExpenseCalculator";
 
 const HomeScreen = () => {
   const [showAddMoney, setShowAddMoney] = useState<boolean>(false);
-
-  const fetchExpenses = async () => {
-    const results = await getExpenses();
-    return results;
-  };
-
-  const { data: expenses, isLoading } = useQuery({
-    queryKey: ["expenses"],
-    queryFn: fetchExpenses,
-  });
+  const [editor, setEditor] = useState<ExpenseProps>();
+  const { data: expenses, isLoading } = useLatestExpense();
   if (isLoading) {
     return <Container></Container>;
   }
   return (
     <>
+      {editor && <EditExpense editor={editor} setEditor={setEditor} />}
+
       {showAddMoney && <AddMoney setShowAddMoney={setShowAddMoney} />}
       <Container>
         <View>
-          <Typo fontWeight="Bold" fontSize={26} style={styles.heading}>
+          <Typo fontWeight="Bold" fontSize={22} style={styles.heading}>
             Expense Tracker
           </Typo>
         </View>
@@ -40,7 +38,7 @@ const HomeScreen = () => {
           <HighlightMoney
             type="Expense"
             heading="Total Expense"
-            money={expenses?.totalExpense}
+            money={totalExpenseCalcuator(expenses?.filteredExpenses)}
           />
           <HighlightMoney
             type="Balance"
@@ -55,7 +53,11 @@ const HomeScreen = () => {
             </Pressable>
           </HighlightMoney>
         </View>
-        <RecentExpense showFull expenses={expenses?.filteredExpenses} />
+        <RecentExpense
+          setEditor={setEditor}
+          showFull
+          expenses={expenses?.filteredExpenses}
+        />
       </Container>
     </>
   );

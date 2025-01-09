@@ -28,13 +28,13 @@ const HighlightMoney = ({
   }
   return (
     <View style={[styles.container, style]}>
-      <View style={[globalStyles.row, globalStyles.center]}>
-        <Typo fontSize={18} style={styles.text}>
+      <View style={[globalStyles.row]}>
+        <Typo fontSize={16} style={styles.text}>
           {heading}
         </Typo>
         {children}
       </View>
-      <Typo fontSize={24} fontWeight="Bold" style={styles.text}>
+      <Typo fontSize={22} fontWeight="Bold" style={styles.text}>
         Rs. {money}
       </Typo>
     </View>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#1CAC78",
     borderRadius: 10,
     width: "50%",
-    elevation:4
+    elevation: 4,
   },
   text: {
     color: "white",
