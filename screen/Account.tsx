@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Container from "../global/ui/Container";
 import Typo from "../global/ui/Typo";
-import { useQueryClient } from "@tanstack/react-query";
 import { useAllTransactions } from "../hook/dataHooks";
 import { totalExpenseCalcuator } from "../global/functions/totalExpenseCalculator";
 
@@ -17,15 +16,21 @@ const Account = () => {
         <View style={styles.innerContainer}>
           <Typo fontSize={18}>Aravind Vijayan</Typo>
         </View>
-        <View style={[styles.innerContainer, { backgroundColor: "white" }]}>
-          <Typo>Account Details : </Typo>
+        <View
+          style={[styles.innerContainer, { backgroundColor: "white", gap: 10 }]}
+        >
+          <Typo fontSize={18} style={{textAlign:'center',textDecorationLine:'underline'}} fontWeight="Bold">Account Details</Typo>
           <Typo>
-            Total Expense in this Month :{" "}
-            {totalExpenseCalcuator(data?.thisMonth?.filteredExpenses)}
+            Total Expense in this Month : Rs.
+            <Typo fontSize={20}>
+              {totalExpenseCalcuator(data?.thisMonth?.filteredExpenses)}
+            </Typo>
           </Typo>
           <Typo>
-            Total Expense in this Year :{" "}
-            {totalExpenseCalcuator(data?.thisYear?.filteredExpenses)}
+            Total Expense in this Year : Rs.
+            <Typo fontSize={20}>
+              {totalExpenseCalcuator(data?.thisYear?.filteredExpenses)}
+            </Typo>
           </Typo>
         </View>
       </View>

@@ -1,4 +1,10 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import Container from "../global/ui/Container";
 import Typo from "../global/ui/Typo";
@@ -15,8 +21,21 @@ import { useAllTransactions } from "../hook/dataHooks";
 
 const AllTransactions = () => {
   const [editor, setEditor] = useState<ExpenseProps | undefined>();
-  const { data: allTransactions } = useAllTransactions();
-
+  const { data: allTransactions, isLoading, isError } = useAllTransactions();
+  if (isLoading) {
+    return (
+      <Container>
+        <ActivityIndicator color="white" size="large" />
+      </Container>
+    );
+  }
+  if (isError) {
+    return (
+      <Container>
+        <ActivityIndicator color="white" size="large" />
+      </Container>
+    );
+  }
   return (
     <>
       {editor && <EditExpense editor={editor} setEditor={setEditor} />}

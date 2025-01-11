@@ -74,7 +74,15 @@ const RecentExpense = ({
           );
         }
         return (
-          <Pressable onPress={() => setEditor(row)} key={index}>
+          <Pressable
+            onLongPress={() => {
+              if (noBalance) {
+                setEditor(row);
+              }
+            }}
+            key={index}
+            style={({ pressed }) => pressed && { opacity: 0.5 }}
+          >
             {dateComponent}
             <View
               key={index}

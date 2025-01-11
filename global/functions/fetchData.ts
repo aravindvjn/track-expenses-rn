@@ -16,6 +16,26 @@ export const storeExpense = async (expense: ExpenseProps) => {
     }
 };
 
+export const editMoneyToBeGiven = async (expense: ExpenseProps) => {
+    try {
+        const existingExpenses = await AsyncStorage.getItem('MoneyToBeGiven');
+        const expenses = existingExpenses ? JSON.parse(existingExpenses) : [];
+        console.log(expenses)
+        const oneExpenseIndex = expenses.findIndex((item: ExpenseProps) => (item.id === expense.id) && (item.title === expense.title) && (item.balance === expense.balance));
+
+        if (oneExpenseIndex !== -1) {
+            expenses[oneExpenseIndex] = expense;
+            await AsyncStorage.setItem('MoneyToBeGiven', JSON.stringify(expenses));
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.log("Error storing expense:", error);
+        return false
+    }
+};
+
 export const getExpenses = async (type = '28Days') => {
     try {
         const expenses = await AsyncStorage.getItem('expenses');
@@ -46,22 +66,23 @@ export const getExpenses = async (type = '28Days') => {
         const totalExpense = filteredExpenses.reduce((total: number, expense: ExpenseProps) => total + expense.amount, 0);
 
         return {
-            totalExpense,
-            filteredExpenses
+            totalExpense: totalExpense || 0,
+            filteredExpenses: filteredExpenses || [],
         };
     } catch (error) {
         console.log('Failed to fetch expenses:', error);
         return { totalExpense: 0, filteredExpenses: [] };
     }
 };
+
 export const addMoneyToBeGiven = async (amountToGive: ExpenseProps) => {
     try {
-        const existingMoney = await AsyncStorage.getItem('moneyToBeGiven');
+        const existingMoney = await AsyncStorage.getItem('MoneyToBeGiven');
         const moneyArray = existingMoney ? JSON.parse(existingMoney) : [];
 
         moneyArray.push(amountToGive);
 
-        await AsyncStorage.setItem('moneyToBeGiven', JSON.stringify(moneyArray));
+        await AsyncStorage.setItem('MoneyToBeGiven', JSON.stringify(moneyArray));
 
         return true;
     } catch (error) {
@@ -72,8 +93,17 @@ export const addMoneyToBeGiven = async (amountToGive: ExpenseProps) => {
 
 export const getStoredMoneyToBeGiven = async () => {
     try {
-        const storedMoney = await AsyncStorage.getItem('moneyToBeGiven');
-        return storedMoney ? JSON.parse(storedMoney) : [];
+        const storedMoney = await AsyncStorage.getItem('MoneyToBeGiven');
+        if (storedMoney) {
+            try {
+                return JSON.parse(storedMoney);
+            } catch (e) {
+                console.log('Error parsing stored money:', e);
+                return [];
+            }
+        } else {
+            return [];
+        }
     } catch (error) {
         console.log('Failed to fetch stored money:', error);
         return [];
